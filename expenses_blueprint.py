@@ -62,7 +62,7 @@ def show_expense(expense_id):
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute(
             """
-            SELECT * FROM expenses WHERE id = %s AND user_id = %s
+            SELECT * FROM expenses WHERE id = %s AND user_id = %s;
             """,
             (expense_id, user_id),
         )
@@ -77,3 +77,32 @@ def show_expense(expense_id):
 
     except Exception as e:
         return jsonify({"Error": str(e)}), 500
+
+
+@expenses_blueprint.route("/expenses/<expense_id>", methods=["DELETE"])
+@token_required
+def delete_expense(expense_id):
+    try:
+        user_id = g.user["id"]
+        connection = get_db_connection()
+        cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute(
+            """
+            SELECT * FROM expenses WHERE id = %s AND user_id = %s;
+            """,
+            (expense_id, user_id),
+        )
+        expense_to_delete = cursor.fetchone()
+        if expense_to_delete is None:
+            return jsonify({"error": "expense not found"})
+        connection.commit()
+
+        cursor.execute(
+            "DELETE FROM expenses WHERE id = %s AND user_id = %s;",
+            (expense_id, user_id),
+        )
+        connection.commit()
+        connection.close()
+        return jsonify({"message": "expense deleted successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
