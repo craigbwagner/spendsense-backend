@@ -50,4 +50,30 @@ def create_expense():
         connection.close()
         return jsonify({"expense": created_expense}), 201
     except Exception as e:
-        return jsonify({"Error": str(e)}), 400
+        return jsonify({"Error": str(e)}), 500
+
+
+@expenses_blueprint.route("/expenses/<expense_id>")
+@token_required
+def show_expense(expense_id):
+    try:
+        user_id = g.user["id"]
+        connection = get_db_connection()
+        cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute(
+            """
+            SELECT * FROM expenses WHERE id = %s AND user_id = %s
+            """,
+            (expense_id, user_id),
+        )
+
+        expense = cursor.fetchone()
+        if expense is not None:
+            connection.close()
+            return jsonify({"expense": expense}), 200
+        else:
+            connection.close()
+        return jsonify({"Error": "expense not found"}), 404
+
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500
