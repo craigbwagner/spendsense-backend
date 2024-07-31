@@ -1,7 +1,6 @@
 from flask import Flask
 from dotenv import load_dotenv
 import os
-import os
 import jwt
 import bcrypt
 import psycopg2, psycopg2.extras
