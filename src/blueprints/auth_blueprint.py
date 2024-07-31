@@ -3,8 +3,8 @@ import jwt
 import bcrypt
 import psycopg2, psycopg2.extras
 from flask import Blueprint, jsonify, request
-from db_helpers import get_db_connection
-from settings_blueprint import create_settings
+from src.services.db_helpers import get_db_connection
+from src.blueprints.settings_blueprint import create_settings
 
 authentication_blueprint = Blueprint("authentication_blueprint", __name__)
 
