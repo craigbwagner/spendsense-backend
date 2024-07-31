@@ -1,6 +1,10 @@
-from flask import Flask
+from flask import Flask, request, jsonify, g
 from dotenv import load_dotenv
 import os
+import os
+import jwt
+import psycopg2, psycopg2.extras
+from flask_cors import CORS
 
 load_dotenv()
 
