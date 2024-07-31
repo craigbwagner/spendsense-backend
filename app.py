@@ -14,13 +14,4 @@ load_dotenv()
 app = Flask(__name__)
 app.register_blueprint(authentication_blueprint)
 
-def get_db_connection():
-    connection = psycopg2.connect(
-        host="localhost",
-        database="flask_auth_db",
-        user=os.getenv("POSTGRES_USERNAME"),
-        password=os.getenv("POSTGRES_PASSWORD"),
-    )
-    return connection
-
 app.run()
