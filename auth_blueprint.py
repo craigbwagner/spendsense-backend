@@ -4,6 +4,7 @@ import bcrypt
 import psycopg2, psycopg2.extras
 from flask import Blueprint, jsonify, request
 from db_helpers import get_db_connection
+from settings_blueprint import create_settings
 
 authentication_blueprint = Blueprint("authentication_blueprint", __name__)
 
@@ -31,6 +32,8 @@ def signup():
         created_user = cursor.fetchone()
         connection.commit()
         token = jwt.encode(created_user, os.getenv("JWT_SECRET"))
+        created_user_id = dict(created_user)["id"]
+        create_settings(created_user_id)
         return jsonify({"token": token, "user": created_user}), 201
     except Exception as error:
         return jsonify({"error": str(error)}), 401
