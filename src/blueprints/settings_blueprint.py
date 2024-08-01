@@ -30,7 +30,23 @@ def create_settings(user_id):
         connection.commit()
         return jsonify({"expense": created_settings}), 201
     except Exception as e:
-        return jsonify({"Error": str(e)}), 400
+        return jsonify({"Error": str(e)}), 500
+    finally:
+        connection.close()
+
+
+@settings_blueprint.route("/settings")
+@token_required
+def settings_index():
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        user_id = g.user["id"]
+        cursor.execute("SELECT * FROM settings WHERE user_id = %s", (user_id,))
+        settings = cursor.fetchone()
+        return jsonify(settings)
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500
     finally:
         connection.close()
 
@@ -67,4 +83,4 @@ def update_settings():
         connection.close()
         return jsonify({"settings": updated_settings}), 200
     except Exception as e:
-        return jsonify({"Error": str(e)}), 400
+        return jsonify({"Error": str(e)}), 500
