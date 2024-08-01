@@ -61,3 +61,46 @@ def create_category_budgets(user_id):
         return jsonify({"Error": str(e)}), 400
     finally:
         connection.close()
+
+
+@category_budgets_blueprint.route("/budgets", methods=["PUT"])
+@token_required
+def update_categories_budget():
+    try:
+        updated_budgets_data = request.json
+        print(updated_budgets_data)
+        connection = get_db_connection()
+        cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        user_id = g.user["id"]
+        cursor.execute("SELECT * FROM category_budgets WHERE user_id = %s", (user_id,))
+        settings_to_update = cursor.fetchone()
+        if settings_to_update is None:
+            return jsonify({"error": "User settings not found"}), 404
+        connection.commit()
+        if settings_to_update["user_id"] is not user_id:
+            return ({"error": "Unauthorized"}), 401
+        cursor.execute(
+            """
+                UPDATE category_budgets SET housing = %s, transportation = %s, food_groceries = %s, utilities = %s, clothing = %s, medical = %s, insurance = %s, personal = %s, education = %s, entertainment = %s, other = %s WHERE user_id = %s RETURNING *
+            """,
+            (
+                updated_budgets_data["housing_budget"],
+                updated_budgets_data["transportation_budget"],
+                updated_budgets_data["food_groceries_budget"],
+                updated_budgets_data["utilities_budget"],
+                updated_budgets_data["clothing_budget"],
+                updated_budgets_data["medical_budget"],
+                updated_budgets_data["insurance_budget"],
+                updated_budgets_data["personal_budget"],
+                updated_budgets_data["education_budget"],
+                updated_budgets_data["entertainment_budget"],
+                updated_budgets_data["other_budget"],
+                user_id,
+            ),
+        )
+        updated_settings = cursor.fetchone()
+        connection.commit()
+        connection.close()
+        return jsonify({"settings": updated_settings}), 200
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 400
