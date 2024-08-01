@@ -28,10 +28,11 @@ def create_settings(user_id):
         )
         created_settings = cursor.fetchone()
         connection.commit()
-        connection.close()
         return jsonify({"expense": created_settings}), 201
     except Exception as e:
         return jsonify({"Error": str(e)}), 400
+    finally:
+        connection.close()
 
 
 @settings_blueprint.route("/settings", methods=["PUT"])
