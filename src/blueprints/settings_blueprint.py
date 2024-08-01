@@ -15,10 +15,10 @@ def create_settings(user_id):
         savings_goal = 0
         cursor.execute(
             """
-                            INSERT INTO settings (monthly_income, monthly_budget, savings_goal, user_id)
-                            VALUES (%s, %s,%s,%s,%s)
-                            RETURNING *
-                        """,
+                INSERT INTO settings (monthly_income, monthly_budget, savings_goal, user_id)
+                VALUES (%s,%s,%s,%s)
+                RETURNING *
+            """,
             (
                 monthly_income,
                 monthly_budget,
