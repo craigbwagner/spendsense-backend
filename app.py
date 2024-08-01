@@ -1,8 +1,5 @@
 from flask import Flask
 from dotenv import load_dotenv
-import os
-import jwt
-import bcrypt
 import psycopg2, psycopg2.extras
 from flask_cors import CORS
 from src.blueprints.auth_blueprint import authentication_blueprint
