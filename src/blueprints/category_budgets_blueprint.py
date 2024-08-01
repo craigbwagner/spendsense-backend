@@ -68,7 +68,6 @@ def create_category_budgets(user_id):
 def update_categories_budget():
     try:
         updated_budgets_data = request.json
-        print(updated_budgets_data)
         connection = get_db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         user_id = g.user["id"]
