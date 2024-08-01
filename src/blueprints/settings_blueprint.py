@@ -15,10 +15,10 @@ def create_settings(user_id):
         savings_goal = 0
         cursor.execute(
             """
-                            INSERT INTO settings (monthly_income, monthly_budget, savings_goal, user_id)
-                            VALUES (%s, %s,%s,%s,%s)
-                            RETURNING *
-                        """,
+                INSERT INTO settings (monthly_income, monthly_budget, savings_goal, user_id)
+                VALUES (%s,%s,%s,%s)
+                RETURNING *
+            """,
             (
                 monthly_income,
                 monthly_budget,
@@ -28,10 +28,11 @@ def create_settings(user_id):
         )
         created_settings = cursor.fetchone()
         connection.commit()
-        connection.close()
         return jsonify({"expense": created_settings}), 201
     except Exception as e:
         return jsonify({"Error": str(e)}), 400
+    finally:
+        connection.close()
 
 
 @settings_blueprint.route("/settings", methods=["PUT"])
