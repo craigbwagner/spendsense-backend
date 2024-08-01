@@ -59,10 +59,8 @@ def update_settings():
         connection = get_db_connection()
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         user_id = g.user["id"]
-        print(user_id)
         cursor.execute("SELECT * FROM settings WHERE user_id = %s", (user_id,))
         settings_to_update = cursor.fetchone()
-        print(settings_to_update)
         if settings_to_update is None:
             return jsonify({"error": "User settings not found"}), 404
         connection.commit()

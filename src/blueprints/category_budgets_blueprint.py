@@ -56,7 +56,6 @@ def create_category_budgets(user_id):
         )
         created_category_budgets = cursor.fetchone()
         connection.commit()
-        print(created_category_budgets)
         return jsonify({"category_budgets": created_category_budgets}), 201
     except Exception as e:
         return jsonify({"Error": str(e)}), 400
