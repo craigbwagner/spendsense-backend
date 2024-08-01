@@ -5,6 +5,7 @@ import psycopg2, psycopg2.extras
 from flask import Blueprint, jsonify, request
 from src.services.db_helpers import get_db_connection
 from src.blueprints.settings_blueprint import create_settings
+from src.blueprints.category_budgets_blueprint import create_category_budgets
 
 authentication_blueprint = Blueprint("authentication_blueprint", __name__)
 
@@ -34,6 +35,7 @@ def signup():
         token = jwt.encode(created_user, os.getenv("JWT_SECRET"))
         created_user_id = dict(created_user)["id"]
         create_settings(created_user_id)
+        create_category_budgets(created_user_id)
         return jsonify({"token": token, "user": created_user}), 201
     except Exception as error:
         return jsonify({"error": str(error)}), 401
