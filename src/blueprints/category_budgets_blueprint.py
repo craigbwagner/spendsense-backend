@@ -56,9 +56,26 @@ def create_category_budgets(user_id):
         )
         created_category_budgets = cursor.fetchone()
         connection.commit()
+        print(created_category_budgets)
         return jsonify({"category_budgets": created_category_budgets}), 201
     except Exception as e:
         return jsonify({"Error": str(e)}), 400
+    finally:
+        connection.close()
+
+
+@category_budgets_blueprint.route("/budgets")
+@token_required
+def category_budgets_index():
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        user_id = g.user["id"]
+        cursor.execute("SELECT * FROM category_budgets WHERE user_id = %s", (user_id,))
+        category_budgets = cursor.fetchone()
+        return jsonify(category_budgets)
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500
     finally:
         connection.close()
 
