@@ -7,10 +7,10 @@ from src.blueprints.expenses_blueprint import expenses_blueprint
 from src.blueprints.settings_blueprint import settings_blueprint
 from src.blueprints.category_budgets_blueprint import category_budgets_blueprint
 
-
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 app.register_blueprint(authentication_blueprint)
 app.register_blueprint(expenses_blueprint)
 app.register_blueprint(settings_blueprint)
