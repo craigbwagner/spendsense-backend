@@ -12,18 +12,16 @@ def create_settings(user_id):
         cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         monthly_income = 0
         monthly_budget = 0
-        weekly_budget = 0
         savings_goal = 0
         cursor.execute(
             """
-                            INSERT INTO settings (monthly_income, monthly_budget, weekly_budget, savings_goal, user_id)
+                            INSERT INTO settings (monthly_income, monthly_budget, savings_goal, user_id)
                             VALUES (%s, %s,%s,%s,%s)
                             RETURNING *
                         """,
             (
                 monthly_income,
                 monthly_budget,
-                weekly_budget,
                 savings_goal,
                 (user_id,),
             ),
@@ -53,12 +51,11 @@ def update_settings():
             return ({"error": "Unauthorized"}), 401
         cursor.execute(
             """
-                UPDATE settings SET monthly_income = %s, monthly_budget = %s, weekly_budget = %s, savings_goal = %s WHERE user_id = %s RETURNING *
+                UPDATE settings SET monthly_income = %s, monthly_budget = %s, savings_goal = %s WHERE user_id = %s RETURNING *
             """,
             (
                 updated_settings_data["monthly_income"],
                 updated_settings_data["monthly_budget"],
-                updated_settings_data["weekly_budget"],
                 updated_settings_data["savings_goal"],
                 user_id,
             ),
