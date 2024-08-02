@@ -48,7 +48,7 @@ def create_expense():
         created_expense = cursor.fetchone()
         connection.commit()
         connection.close()
-        return jsonify({"expense": created_expense}), 201
+        return jsonify(created_expense), 201
     except Exception as e:
         return jsonify({"Error": str(e)}), 500
 
