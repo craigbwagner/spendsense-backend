@@ -136,6 +136,6 @@ def update_expense(expense_id):
         updated_expense = cursor.fetchone()
         connection.commit()
         connection.close()
-        return jsonify({"expense": updated_expense}), 200
+        return jsonify(updated_expense), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
