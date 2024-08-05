@@ -100,7 +100,7 @@ def delete_expense(expense_id):
 
         cursor.execute(
             "DELETE FROM expenses WHERE id = %s;",
-            (expense_id),
+            (expense_id,),
         )
         connection.commit()
         connection.close()
