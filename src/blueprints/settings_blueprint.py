@@ -78,9 +78,8 @@ def update_settings():
             ),
         )
         updated_settings = cursor.fetchone()
-        print(updated_settings)
         connection.commit()
         connection.close()
-        return jsonify({"settings": updated_settings}), 200
+        return jsonify(updated_settings), 200
     except Exception as e:
         return jsonify({"Error": str(e)}), 500
