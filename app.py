@@ -16,4 +16,5 @@ app.register_blueprint(expenses_blueprint)
 app.register_blueprint(settings_blueprint)
 app.register_blueprint(category_budgets_blueprint)
 
-app.run()
+if __name__ == "__main__":
+    app.run()
